@@ -1,0 +1,76 @@
+/*Given a Binary Search Tree and a range [low, high]. Find all the numbers in the BST that
+lie in the given range.
+Note: Element greater than or equal to root go to the right side.(EXAMPLE 2)*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define BST node
+struct Node
+{
+    int data;
+    struct Node *left;
+    struct Node *right;
+};
+
+// Create new node
+struct Node *createNode(int val)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = val;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Insert into BST
+struct Node *insert(struct Node *root, int val)
+{
+    if (root == NULL)
+        return createNode(val);
+
+    if (val < root->data)
+        root->left = insert(root->left, val);
+    else
+        root->right = insert(root->right, val); // >= goes right
+
+    return root;
+}
+
+// Function to print values in range [low, high]
+void printInRange(struct Node *root, int low, int high)
+{
+    if (root == NULL)
+        return;
+
+    // Only go left if needed
+    if (root->data > low)
+        printInRange(root->left, low, high);
+
+    // Print if in range
+    if (root->data >= low && root->data <= high)
+        printf("%d ", root->data);
+
+    // Only go right if needed
+    if (root->data < high)
+        printInRange(root->right, low, high);
+}
+
+// Driver code
+int main()
+{
+    struct Node *root = NULL;
+
+    // Example 1
+    int values[] = {17, 4, 18, 2, 9};
+    int n = sizeof(values) / sizeof(values[0]);
+
+    for (int i = 0; i < n; i++)
+        root = insert(root, values[i]);
+
+    int low = 4, high = 24;
+
+    printf("Output: ");
+    printInRange(root, low, high);
+
+    return 0;
+}
