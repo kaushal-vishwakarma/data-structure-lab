@@ -1,0 +1,89 @@
+/*Given a string s, composed of different combinations of '(' , ')', '{', '}', '[', ']'.
+Determine
+ whether the Expression is balanced or not.
+ An expression is balanced if:
+1. Each opening bracket has a corresponding closing bracket of the same type.
+ 2. Opening brackets must be closed in the correct order.*/
+
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100000
+
+// Stack implementation
+char stack[MAX];
+int top = -1;
+
+void push(char c)
+{
+    stack[++top] = c;
+}
+
+char pop()
+{
+    if (top == -1)
+        return '#';
+    return stack[top--];
+}
+
+int isEmpty()
+{
+    return top == -1;
+}
+
+int isMatchingPair(char open, char close)
+{
+    return (open == '(' && close == ')') ||
+           (open == '{' && close == '}') ||
+           (open == '[' && close == ']');
+}
+
+// Function to check balance
+int isBalanced(char *s)
+{
+    top = -1; // reset stack
+
+    for (int i = 0; s[i]; i++)
+    {
+        char c = s[i];
+
+        // Opening brackets
+        if (c == '(' || c == '{' || c == '[')
+        {
+            push(c);
+        }
+        // Closing brackets
+        else
+        {
+            char popped = pop();
+            if (!isMatchingPair(popped, c))
+            {
+                return 0; // false
+            }
+        }
+    }
+
+    return isEmpty(); // true if stack empty
+}
+
+// Driver for all examples
+int main()
+{
+    char *tests[] = {
+        "[{()}]",
+        "[()()]{}",
+        "([]",
+        "([{]})"};
+
+    int n = 4;
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("Input: %s\n", tests[i]);
+        if (isBalanced(tests[i]))
+            printf("Output: true\n\n");
+        else
+            printf("Output: false\n\n");
+    }
+    return 0;
+}
