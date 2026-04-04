@@ -1,0 +1,67 @@
+/*Given a Binary Search Tree and a range [low, high]. Find all the numbers in the BST that
+2 lie in the given range.
+3 Note: Element greater than or equal to root go to the right side.  (EXAMPLE 2) */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{
+    int data;
+    struct Node *left;
+    struct Node *right;
+};
+
+struct Node *createNode(int val)
+{
+    struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+    node->data = val;
+    node->left = node->right = NULL;
+    return node;
+}
+
+struct Node *insert(struct Node *root, int val)
+{
+    if (!root)
+        return createNode(val);
+
+    if (val < root->data)
+        root->left = insert(root->left, val);
+    else
+        root->right = insert(root->right, val);
+
+    return root;
+}
+
+void printInRange(struct Node *root, int low, int high)
+{
+    if (!root)
+        return;
+
+    if (root->data > low)
+        printInRange(root->left, low, high);
+
+    if (root->data >= low && root->data <= high)
+        printf("%d ", root->data);
+
+    if (root->data < high)
+        printInRange(root->right, low, high);
+}
+
+int main()
+{
+    struct Node *root = NULL;
+
+    // Example 2 input
+    int values[] = {16, 7, 20, 1, 10};
+    int n = sizeof(values) / sizeof(values[0]);
+
+    for (int i = 0; i < n; i++)
+        root = insert(root, values[i]);
+
+    int low = 13, high = 23;
+
+    printf("Output: ");
+    printInRange(root, low, high);
+    return 0;
+}
